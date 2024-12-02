@@ -1,8 +1,14 @@
 from fh_vuexy import *
 
 def TopMenu(session):
-    return \
-        NavBarLayout(
+
+    access_token = session['access_token'] if 'access_token' in session else None
+
+    if access_token:
+        user = session['user']
+        role: str = user['role']
+
+        items = (
             NavBarAvatar(
                 'John Doe', 'Admin',
                 NavBarAvatarItem(
@@ -22,10 +28,17 @@ def TopMenu(session):
                     href='#'
                 ),
                 Divider(),
-                NavBarDropDownButton('Logout', icon='ti ti-power-off', href='#', cls='btn-danger'),
+                NavBarDropDownButton('Logout', icon='ti ti-logout', href='#', cls='btn-danger'),
                 img_src='/img/avatars/1.png',
                 status='offline'
-            ),
+            )
+        )
+    else:
+        items = StyledButton('Login', icon='ti ti-login-2', cls='btn btn-primary', href='/auth')
+
+    return \
+        NavBarLayout(
+            items,
             id='layout-navbar',
             light_controls=True
         )

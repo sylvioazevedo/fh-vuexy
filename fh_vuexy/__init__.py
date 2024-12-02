@@ -15,16 +15,16 @@ vuexy_hdrs = (
     Link(rel='preconnect', href='https://fonts.gstatic.com', crossorigin=''),
     Link(href='https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap', rel='stylesheet'),
 
-    Link(rel='stylesheet', href='vendor/fonts/fontawesome.css'),
-    Link(rel='stylesheet', href='vendor/fonts/tabler-icons.css'),
-    Link(rel='stylesheet', href='vendor/fonts/flag-icons.css'),
-    Link(rel='stylesheet', href='vendor/css/rtl/core.css'),
-    Link(rel='stylesheet', href='vendor/css/rtl/theme-default.css'),
+    Link(rel='stylesheet', href='/vendor/fonts/fontawesome.css'),
+    Link(rel='stylesheet', href='/vendor/fonts/tabler-icons.css'),
+    Link(rel='stylesheet', href='/vendor/fonts/flag-icons.css'),
+    Link(rel='stylesheet', href='/vendor/css/rtl/core.css'),
+    Link(rel='stylesheet', href='/vendor/css/rtl/theme-default.css'),
 
-    Link(rel='stylesheet', href='css/demo.css'),
+    Link(rel='stylesheet', href='/css/demo.css'),
     
-    Link(rel='stylesheet', href='vendor/libs/node-waves/node-waves.css'),
-    Link(rel='stylesheet', href='vendor/libs/perfect-scrollbar/perfect-scrollbar.css'),
+    Link(rel='stylesheet', href='/vendor/libs/node-waves/node-waves.css'),
+    Link(rel='stylesheet', href='/vendor/libs/perfect-scrollbar/perfect-scrollbar.css'),
     # Link(rel='stylesheet', href='vendor/libs/typeahead-js/typeahead.css'),
     # Link(rel='stylesheet', href='vendor/libs/apex-charts/apex-charts.css'),
     # Link(rel='stylesheet', href='vendor/libs/swiper/swiper.css'),
@@ -33,25 +33,25 @@ vuexy_hdrs = (
     # Link(rel='stylesheet', href='vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css'),
     # Link(rel='stylesheet', href='vendor/css/pages/cards-advance.css'),
     
-    Script(src='vendor/js/helpers.js'),    
-    Script(src='js/config.js')
+    Script(src='/vendor/js/helpers.js'),    
+    Script(src='/js/config.js')
 )
 
 vuexy_ftrs = (    
-    Script(src='vendor/libs/jquery/jquery.js'),
-    Script(src='vendor/libs/popper/popper.js'),
-    Script(src='vendor/js/bootstrap.js'),
-    Script(src='vendor/libs/node-waves/node-waves.js'),
-    Script(src='vendor/libs/perfect-scrollbar/perfect-scrollbar.js'),
-    Script(src='vendor/libs/hammer/hammer.js'),
+    Script(src='/vendor/libs/jquery/jquery.js'),
+    Script(src='/vendor/libs/popper/popper.js'),
+    Script(src='/vendor/js/bootstrap.js'),
+    Script(src='/vendor/libs/node-waves/node-waves.js'),
+    Script(src='/vendor/libs/perfect-scrollbar/perfect-scrollbar.js'),
+    Script(src='/vendor/libs/hammer/hammer.js'),
+    Script(src='/vendor/js/menu.js'),
+    Script(src='/js/main.js')
     # Script(src='vendor/libs/i18n/i18n.js'),
-    # Script(src='vendor/libs/typeahead-js/typeahead.js'),
-    # Script(src='vendor/js/menu.js'),
+    # Script(src='vendor/libs/typeahead-js/typeahead.js'),    
     # Script(src='vendor/libs/apex-charts/apexcharts.js'),
     # Script(src='vendor/libs/swiper/swiper.js'),
     # Script(src='vendor/libs/datatables-bs5/datatables-bootstrap5.js'),
-
-    Script(src='js/main.js'),
+    
 
     # Script(src='js/dashboards-analytics.js')
 )
@@ -109,8 +109,9 @@ def NavBarDropDownButton(text, href, icon=None, cls='', **kw):
         Li(
             Div(
                 A(
+                    I(cls=f'{icon} me-2 ti-14px'),
                     Small(text, cls='align-middle'),
-                    I(cls=f'{icon} ms-2 ti-14px'),
+                    
                     href=href,
                     cls=f'btn d-flex {cls}'
                 ),
@@ -575,7 +576,7 @@ def VerticalMenuItem(text, href, icon=None, active:bool = False, cls='', **kw):
         cls=f'menu-item{(' active' if active else '')}',
     )
 
-def VerticalMenu(id, items, brand_logo, brand_text, cls='', **kw):
+def VerticalMenu(id, *items, brand_logo, brand_text, cls='', **kw):
 
     return Aside(
                 Div(
@@ -632,7 +633,7 @@ def FooterWrapper(*c, cls='', **kw):
 def Page(title, *c, cls='', **kw):
     return \
         ContentWrapper(
-            H4(title, cls='py-4 mb-0'),
+            H4(title, cls='py-4 mb-0') if title else None,
             *c,
             cls=cls,
             **kw
@@ -643,3 +644,47 @@ def TextBody(*c):
 
 def InlineBlock(*c, cls='', **kw):
     return Div(*c, cls=f'd-none d-lg-inline-block {cls}', **kw)
+
+class AlertTypeT(VEnum):
+    Primary = 'primary'
+    Secondary = 'secondary'
+    Success = 'success'
+    Danger = 'danger'
+    Warning = 'warning'
+    Info = 'info'
+    Light = 'light'
+    Dark = 'dark'
+
+def Alert(*c, type:AlertTypeT=AlertTypeT.Primary, icon=None, dimissible=False, outline=False, cls='', **kw):
+    return \
+        Div(
+            Span(I(cls=f'{icon} alert-icon rounded') if icon else None),
+            *c,
+            cls=f'alert alert{"-outline" if outline else ""}-{type}{' alert-dismissible' if dimissible else ''}{' d-flex align-items-center' if icon else ''} {cls}',
+            role='alert',
+            **kw
+        )
+
+def AlertText(title, text):
+    return \
+        H5(title, cls='alert-heading mb2'), \
+        P(text, cls='mb-0')
+    
+def StyledButton(text, href, icon=None, type='button', cls='', **kw):
+    return \
+        A(
+            I(cls=f'{icon} me-2') if icon else None,
+            text,
+            href=href,
+            cls=f'btn d-flex {cls}',
+            role=type,
+            **kw
+        )
+def TableActionButton(icon=None, href='#', cls='', **kw):
+    return \
+        A(
+            I(cls=f'{icon if icon else 'ti ti-pencil'} ti-md'),
+            href=href,
+            cls=f'btn btn-sm btn-text-secondary rounded-pill btn-icon waves-effect {cls}',
+            **kw
+        )
