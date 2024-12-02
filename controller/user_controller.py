@@ -80,16 +80,16 @@ def post():
     pass
 
 @rt('/update')
-def put(user: dict, session):
+def post(user: dict, session):
 
     print(user)
 
-    # hanzo.set_access_token(session['access_token'])
-    # hanzo.set_refresh_token(session['refresh_token'])       
-    # hanzo.update_user(user)
+    hanzo.set_access_token(session['access_token'])
+    hanzo.set_refresh_token(session['refresh_token'])       
+    hanzo.update_user(user)
     
     return Redirect('/user')
 
 @rt('/delete/{id}')
-def delete(id: str):
+def get(id: str):
     pass

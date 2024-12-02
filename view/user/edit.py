@@ -29,7 +29,7 @@ def EditUserPage(session, message = None, *args, **kwargs):
                             cls='card-header d-flex justify-content-between align-items-center'
                         ),
                         Form(
-                            Input(type='hidden', name='_id', value=user['_id'] if '_id' in user else ''),
+                            Input(type='hidden', name='_id', value=user['_id'] if '_id' in user else ''),                            
                             Div(
                                 Div(
                                     Label('Username', for_='username'),
@@ -57,8 +57,8 @@ def EditUserPage(session, message = None, *args, **kwargs):
                                 Button('Save', cls='btn btn-primary', role='submit', type='submit'),
                                 cls='pt-6'
                             ),
+                            method='POST',
                             action='/user/update',
-                            method='PUT',
                             cls='card-body form'                            
                         ),
                         cls='card'

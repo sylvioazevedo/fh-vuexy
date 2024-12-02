@@ -157,7 +157,7 @@ class HanzoClient():
         update a user
         """
         url = f'{self.api_url}/user'
-        response = requests.put(url, headers=self.headers, data=json.dumps(user))
+        response = requests.put(url, headers=self.headers, json=user)
 
         if response.status_code != 200:
             raise ConnectionError(f'Update user request failed: {response.text}')
