@@ -2,33 +2,55 @@ from etc.settings import APP_NAME
 from fh_vuexy import *
 from view.templates.main_layout import MainLayout
 
-def UserIndexPage(session, message = None, *args, **kwargs):
+def paginate(items, page, per_page, max_pages=5):
+    total_items = len(items)
+    total_pages = (total_items + per_page - 1) // per_page
+    start = (page - 1) * per_page
+    end = start + per_page
+    items_on_page = items[start:end]
 
-    users = args[0]
+    half_max_pages = max_pages // 2
+    if total_pages <= max_pages:
+        page_range = range(1, total_pages + 1)
+    elif page <= half_max_pages:
+        page_range = range(1, max_pages + 1)
+    elif page > total_pages - half_max_pages:
+        page_range = range(total_pages - max_pages + 1, total_pages + 1)
+    else:
+        page_range = range(page - half_max_pages, page + half_max_pages + 1)
 
-    if not users:
-        users = kwargs.get('users', [])
+    return items_on_page, page_range, total_pages
+
+def UserIndexPage(session, **kwargs):
+    users = kwargs.get('users', [])
+    message = kwargs.get('message', None)
+    page = int(kwargs.get('page', 1))
+    per_page = 10
+
+    users_on_page, page_range, total_pages = paginate(users, page, per_page)
 
     return \
         MainLayout(f'{APP_NAME} - Users',
             Page(
-                None,                
+                None,
                 Div(
                     Div(
                         Div(
                             Div(
+                                Alert(Small(message), type=AlertTypeT.Info, icon='ti ti-ban', cls='mb-2') if message else None,
                                 H5('Users', cls='card-title mb-0'),
                                 cls='head-label text-start'
-                            ),  
-                            Div(                      
-                                A(I(cls='ti ti-plus me-2'), 'Add User', cls='btn btn-primary create-new waves-effect', href='/user/create'),                            
-                                cls='text-end'                            
+                            ),
+                            Div(
+                                A(I(cls='ti ti-plus me-2'), 'Add User', cls='btn btn-primary create-new waves-effect', href='/user/create'),
+                                cls='text-end'
                             ),
                             cls='card-header d-flex justify-content-between align-items-center'
                         ),
                         Table(
                             Thead(
                                 Tr(
+                                    Th('Name'),
                                     Th('Username'),
                                     Th('Email'),
                                     Th('Role'),
@@ -37,6 +59,9 @@ def UserIndexPage(session, message = None, *args, **kwargs):
                             ),
                             Tbody(
                                 *[Tr(
+                                    Td(
+                                        A(user['name'], href=f'/user/show/{user["_id"]["$oid"]}')
+                                    ),
                                     Td(
                                         A(user['username'], href=f'/user/show/{user["_id"]["$oid"]}')
                                     ),
@@ -47,17 +72,34 @@ def UserIndexPage(session, message = None, *args, **kwargs):
                                         TableActionButton(href=f'/user/delete/{user["_id"]["$oid"]}', icon='ti ti-trash', cls='btn-text-danger', onclick='return confirm("Are you sure you want to delete this user?")'),
                                         width='20px',
                                     ),
-                                    # make background color grey of the row alternate depending on the i index value
                                     cls='table-light' if i % 2 == 0 else '',
-                                ) for i, user in enumerate(users)],
+                                ) for i, user in enumerate(users_on_page)],
                                 cls='table-border-bottom-0'
                             ),
                             cls='table table-sm table-hover'
                         ),
+                        Nav(
+                            Ul(
+                                Li(
+                                    A('Previous', href=f'/user?page={page-1}', tabindex='-1', cls='page-link') if page > 1 else None,
+                                    cls='page-item' if page > 1 else 'page-item disabled'
+                                ),
+                                *[Li(
+                                    A(str(p), href=f'/user?page={p}', cls='page-link') if p != page else A(str(p), href='#', cls='page-link'),
+                                    cls='page-item' if p != page else 'page-item active'
+                                ) for p in page_range],
+                                Li(
+                                    A('Next', href=f'/user?page={page+1}', cls='page-link') if page < total_pages else None,
+                                    cls='page-item' if page < total_pages else 'page-item disabled'
+                                ),
+                                cls='pagination'
+                            ),
+                            aria_label='...'
+                        ),
                         cls='table-responsive text-nowrap'
                     ),
                     cls='card'
-                ),                                        
+                ),
             ),
             session=session
         )

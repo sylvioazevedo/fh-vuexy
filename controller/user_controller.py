@@ -8,88 +8,85 @@ from view.user.show import ShowUserPage
 from view.user.edit import EditUserPage
 from view.user.datatable import DatatablePage
 
-hdrs_ext = (
-    Link(rel='stylesheet', href='/vendor/libs/datatables-bs5/datatables.bootstrap5.css'),
-    Link(rel='stylesheet', href='/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css'),
-    Link(rel='stylesheet', href='/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css'),
-    Link(rel='stylesheet', href='/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css'),
-    Link(rel='stylesheet', href='/vendor/libs/flatpickr/flatpickr.css'),
-    Link(rel='stylesheet', href='/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css'),
+hdrs_ext = (    
     Link(rel='stylesheet', href='/vendor/libs/@form-validation/form-validation.css'),
 )
 
-ftrs_ext = (    
-    Script(src='/vendor/libs/datatables-bs5/datatables-bootstrap5.js'),
-    Script(src='/vendor/libs/moment/moment.js'),
-    Script(src='/vendor/libs/flatpickr/flatpickr.js'),
-
+ftrs_ext = (        
     Script(src='/vendor/libs/@form-validation/popular.js'),
     Script(src='/vendor/libs/@form-validation/bootstrap5.js'),
     Script(src='/vendor/libs/@form-validation/auto-focus.js'),
-
-    Script(src='/js/tables-datatables-basic.js'),    
+    
+    Script(src='/js/custom/form-validation.js'),    
 )
 
 user_app, rt = get_app(hdrs_ext=hdrs_ext, ftrs_ext=ftrs_ext)
 
-hanzo = HanzoClient(HANZO_API_URI)
-
 @rt('/')
-def index(session, message=None):
+def index(session, sort=None, order=None, page=1, max=10, message=None):
 
     session['active'] = 'Users'
-    hanzo.set_access_token(session['access_token'])
-    hanzo.set_refresh_token(session['refresh_token'])       
-    users = hanzo.list_users()
+    hanzo = HanzoClient(HANZO_API_URI, session)
+    users = hanzo.find_all_by('user', sort=sort, order=order, page=page, max=max)
 
-    return UserIndexPage(session, message, users)
+    return UserIndexPage(session, message=message, users=users)
 
 @rt('/create')
 def get(session, message=None):
 
     session['active'] = 'Users'
-    hanzo.set_access_token(session['access_token'])
-    hanzo.set_refresh_token(session['refresh_token']) 
-    roles = hanzo.list_roles()
-    return NewUserPage(session, message, roles)
+    hanzo = HanzoClient(HANZO_API_URI, session)
+    roles = hanzo.list('role')    
+    return NewUserPage(session, message=message, roles=roles)
 
 @rt('/show/{id}')
 def get(id: str, session, message=None):
 
     session['active'] = 'Users'
-    hanzo.set_access_token(session['access_token'])
-    hanzo.set_refresh_token(session['refresh_token'])       
+    hanzo = HanzoClient(HANZO_API_URI, session)
     user = hanzo.get_user(id)
 
-    return ShowUserPage(session, message, user)
+    return ShowUserPage(session, message=message, user=user)
 
 @rt('/edit/{id}')
 def get(id:str, session, message=None):
-    hanzo.set_access_token(session['access_token'])
-    hanzo.set_refresh_token(session['refresh_token'])       
+    hanzo = HanzoClient(HANZO_API_URI, session)
     user = hanzo.get_user(id)
     roles = hanzo.list_roles()
-    return EditUserPage(session, message, user, roles)
+    return EditUserPage(session, message=message, user=user, roles=roles)
 
 @rt('/dt')
-def index(session, message=None):
-    return DatatablePage(session, message)
+def dt(session, message=None):
+    return DatatablePage(session, message=message)
 
 @rt('/save')
-def post():
-    pass
+def post(user:dict, session):
+
+    print(user)
+    hanzo = HanzoClient(HANZO_API_URI, session)
+    resp = hanzo.insert_user(user)
+
+    if  not 'id' in resp:
+        return NewUserPage(session, message=f'Error saving user [{user['username']}].', roles=hanzo.list_roles())
+    
+    user['_id'] = resp['id']
+
+    #return ShowUserPage(session, message=f'User [{resp['id']}:{user['username']}] successfully saved.', user=user)
+    return index(session, message=f'User [{resp['id']}:{user['username']}] successfully saved.')
 
 @rt('/update')
 def post(user: dict, session):
 
     print(user)
-
-    hanzo.set_access_token(session['access_token'])
-    hanzo.set_refresh_token(session['refresh_token'])       
+    hanzo = HanzoClient(HANZO_API_URI, session)
     hanzo.update_user(user)
     
-    return Redirect('/user')
+    return index(session, message=f'User [{user["_id"]}:{user["username"]}] successfully updated.')
 
 @rt('/delete/{id}')
-def get(id: str):
-    pass
+def get(id: str, session):
+
+    hanzo = HanzoClient(HANZO_API_URI, session)
+    hanzo.delete_user(id)
+    
+    return index(session, message=f'User [{id}] successfully updated.')

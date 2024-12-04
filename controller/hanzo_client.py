@@ -4,7 +4,7 @@ import requests
 
 class HanzoClient():
 
-    def __init__(self, api_url:str=None):
+    def __init__(self, api_url:str=None, session=None):
 
         self.api_url = api_url if api_url else 'http://127.0.0.1:35777'
 
@@ -15,11 +15,10 @@ class HanzoClient():
         }
 
         # connection tokens
-        self.access_token = None
-        self.refresh_token = None
+        self.session = session        
 
-        # get session
-        self.session = requests.Session()
+        # set authorization header
+        self.headers['Authorization'] = ('Bearer ' + self.session['access_token']) if 'access_token' in self.session else None
 
     def login(self, username:str, password:str):
         """
@@ -41,20 +40,19 @@ class HanzoClient():
         
         response_data = response.json()
 
-        self.access_token = response_data['access_token']
-        self.refresh_token = response_data['refresh_token']
+        self.session['access_token'] = response_data['access_token']
+        self.session['refresh_token'] = response_data['refresh_token']
 
         # set authorization header
-        self.headers['Authorization'] = 'Bearer ' + self.access_token
+        self.headers['Authorization'] = 'Bearer ' + self.session['access_token']
 
-        return self.access_token, self.refresh_token
   
     def refresh(self):
         """
         refresh the access token
         """
         url = f'{self.api_url}/refresh'
-        refresh_headers = {'Authorization': 'Bearer ' + self.refresh_token}
+        refresh_headers = {'Authorization': 'Bearer ' + self.session['refresh_token']}
 
         response = requests.post(url, headers=refresh_headers)
         response_data = response.json()
@@ -62,27 +60,25 @@ class HanzoClient():
         if response.status_code != 200:
             raise Exception(f'Refresh request failed: {str(response.status_code)} - {response.reason}')
         
-        self.access_token = response_data['access_token']
-        self.refresh_token = response_data['refresh_token']
+        self.session['access_token'] = response_data['access_token']
+        self.session['refresh_token'] = response_data['refresh_token']
+
 
         # set authorization header
-        self.headers['Authorization'] = 'Bearer ' + self.access_token
-
-        return self.access_token
-        
+        self.headers['Authorization'] = 'Bearer ' + self.session['access_token']        
         
     def set_access_token(self, access_token:str):
         """
         set the access token
         """
-        self.access_token = access_token
-        self.headers['Authorization'] = 'Bearer ' + self.access_token
+        self.session['access_token'] = access_token
+        self.headers['Authorization'] = 'Bearer ' + self.session['access_token']
 
     def set_refresh_token(self, refresh_token:str):
         """
         set the refresh token
         """
-        self.refresh_token = refresh_token
+        self.session['refresh_token'] = refresh_token
 
     def session(self):
         """
@@ -100,13 +96,13 @@ class HanzoClient():
         """
         get the access token
         """
-        return self.access_token
+        return self.session['access_token']
     
     def get_refresh_token(self):
         """
         get the refresh token
         """
-        return self.refresh_token    
+        return self.session['refresh_token']
 
     def ping(self):
         """
@@ -120,95 +116,85 @@ class HanzoClient():
 
         return response.json()
     
-    def list_users(self):
-        """
-        list all users
-        """
-        url = f'{self.api_url}/user'
-        response = requests.get(url, headers=self.headers)
+    def make_request(self, url, **kwargs):
+
+        method = kwargs.get('method', 'GET')
+
+        if 'method' in kwargs:
+            del kwargs['method']
+
+        response = requests.request(url=url, method=method, headers=self.headers, **kwargs)
 
         if response.status_code != 200:
             data = response.json()
 
             if 'msg' in data and data['msg'] == 'Token has expired':
                 self.refresh()
-                response = requests.get(url, headers=self.headers)
+                response = requests.request(url=url, method=method, headers=self.headers, **kwargs)                
 
                 if response.status_code != 200:
-                    raise ConnectionError(f'List users request failed: {response.status_code} - {response.reason}')               
-            
+                    raise ConnectionError(f'Request failed: {response.status_code} - {response.reason}')
 
-        return response.json()    
+            else:
+                raise ConnectionError(f'Request failed: {response.status_code} - {response.reason}')            
+    
+        return response.json()
+
+    def list_users(self):
+        """
+        list all users
+        """
+        url = f'{self.api_url}/user'
+        
+        return self.make_request(url)
+        
 
     def insert_user(self, user):
         """
         insert a user
         """
         url = f'{self.api_url}/user'
-        response = requests.post(url, headers=self.headers, json=user)
-
-        if response.status_code != 200:
-            raise ConnectionError(f'Insert user request failed: {response.text}')
-
-        return response.json()
+        return self.make_request(url, method='POST', json=user)
     
     def update_user(self, user):
         """
         update a user
         """
         url = f'{self.api_url}/user'
-        response = requests.put(url, headers=self.headers, json=user)
-
-        if response.status_code != 200:
-            raise ConnectionError(f'Update user request failed: {response.text}')
-
-        return response.json()
+        return self.make_request(url, method='PUT', json=user)
     
     def delete_user(self, user_id):
         """
         delete a user
         """
         url = f'{self.api_url}/user/{user_id}'
-        response = requests.delete(url, headers=self.headers)
-
-        if response.status_code != 200:
-            raise ConnectionError(f'Delete user request failed: {response.text}')
-
-        return response.json()
+        return self.make_request(url, method='DELETE')
     
     def get_user(self, user_id):
         """
         get a user
         """
         url = f'{self.api_url}/user/{user_id}'
-        response = requests.get(url, headers=self.headers)
-
-        if response.status_code != 200:
-            raise ConnectionError(f'Get user request failed: {response.text}')
-
-        return response.json()
+        return self.make_request(url)        
     
     def get_user_by_username(self, username):
         """
         get a user
         """
         url = f'{self.api_url}/user/info/{username}'
-        response = self.session.get(url, headers=self.headers)
-
-        if response.status_code != 200:
-            raise ConnectionError(f'Get user request failed: {response.text}')
-
-        return response.json()
+        return self.make_request(url)
     
-    def list_roles(self):
+    def list(self, collection):
         """
         list all roles
         """
-        url = f'{self.api_url}/role'
-        response = requests.get(url, headers=self.headers)
-
-        if response.status_code != 200:
-            raise ConnectionError(f'List roles request failed: {response.text}')
-
-        return response.json()
+        url = f'{self.api_url}/{collection}'
+        return self.make_request(url)
+    
+    def find_all_by(self, collection, **kwargs):
+        """
+        find all by
+        """
+        url = f'{self.api_url}/{collection}'
+        return self.make_request(url, params=kwargs)
                   

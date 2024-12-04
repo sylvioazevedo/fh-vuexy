@@ -32,13 +32,23 @@ def EditUserPage(session, message = None, *args, **kwargs):
                             Input(type='hidden', name='_id', value=user['_id'] if '_id' in user else ''),                            
                             Div(
                                 Div(
-                                    Label('Username', for_='username'),
-                                    Input(id='username', name='username', type='text', cls='form-control', placeholder='Enter username', value=user['username'] if 'username' in user else ''),
+                                    Label('Name', for_='name'),
+                                    Input(id='name', name='name', type='text', cls='form-control', placeholder='Name', value=user['name'] if 'username' in user else ''),
+                                    cls='col-md-6 mb-3'
+                                ),                                
+                                Div(
+                                    Label('Email', for_='email'),
+                                    Input(id='email', name='email', type='email', cls='form-control', placeholder='E-mail: joe@doe.com', value=user['email'] if 'email' in user else ''),
                                     cls='col-md-6 mb-3'
                                 ),
                                 Div(
-                                    Label('Email', for_='email'),
-                                    Input(id='email', name='email', type='email', cls='form-control', placeholder='Enter email', value=user['email'] if 'email' in user else ''),
+                                    Label('Username', for_='username'),
+                                    Input(id='username', name='username', type='text', cls='form-control', placeholder='Username', value=user['username'] if 'username' in user else ''),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
+                                    Label('Password', for_='password'),
+                                    Input(id='password', name='password', type='password', cls='form-control', placeholder='******'),
                                     cls='col-md-6 mb-3'
                                 ),
                                 Div(
@@ -54,9 +64,11 @@ def EditUserPage(session, message = None, *args, **kwargs):
                                 cls='row g-6'
                             ),                            
                             Div(
-                                Button('Save', cls='btn btn-primary', role='submit', type='submit'),
+                                Button((I(cls='ti ti-device-floppy me-2'),'Save'), cls='btn btn-primary me-2', role='submit', type='submit'),
+                                A((I(cls='ti ti-trash me-2'),'Delete'), cls='btn btn-danger me-2', href=f'/user/delete/{user["_id"]}', onclick='return confirm("Are you sure you want to delete this user?")'),
+                                A((I(cls='ti ti-arrow-left me-2'), 'Back'), cls='btn btn-secondary me-2', href='/user'),
                                 cls='pt-6'
-                            ),
+                            ),                            
                             method='POST',
                             action='/user/update',
                             cls='card-body form'                            

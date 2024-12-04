@@ -7,7 +7,7 @@ def DatatablePage(session, message = None):
 
     session['active'] = 'Users'
 
-    hanzo = HanzoClient(api_url=HANZO_API_URI)
+    hanzo = HanzoClient(api_url=HANZO_API_URI, session=session)
     hanzo.set_access_token(session['access_token'])
     hanzo.set_refresh_token(session['refresh_token'])
 

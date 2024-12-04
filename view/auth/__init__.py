@@ -2,7 +2,7 @@ from etc.settings import APP_NAME
 from fh_vuexy import *
 from view.templates.main_layout import MainLayout
 
-def LoginPage(session, message = None):
+def LoginPage(session, error = None):
 
     session['active'] = 'Login'
 
@@ -12,7 +12,7 @@ def LoginPage(session, message = None):
                 Div(
                     Div(
                         Form(
-                            Alert(Small(message), type=AlertTypeT.Danger, icon='ti ti-ban', cls='mb-2') if message else None,
+                            Alert(Small(error), type=AlertTypeT.Danger, icon='ti ti-ban', cls='mb-2') if error else None,
                             H4('Sign In', cls='card-title mL-2'),
                             Div(
                                 Label('Username', fr='username', cls='form-label'),

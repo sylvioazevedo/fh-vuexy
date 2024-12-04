@@ -10,7 +10,7 @@ vuexy_hdrs = (
     # Title('Dashboard - Analytics | Vuexy - Bootstrap Admin Template'),    
     # Meta(name='description', content=''),
     
-    Link(rel='icon', type='image/x-icon', href='img/favicon/favicon.ico'),
+    Link(rel='icon', type='image/x-icon', href='/img/favicon/favicon.ico'),
     Link(rel='preconnect', href='https://fonts.googleapis.com'),
     Link(rel='preconnect', href='https://fonts.gstatic.com', crossorigin=''),
     Link(href='https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap', rel='stylesheet'),
@@ -50,8 +50,6 @@ vuexy_ftrs = (
     # Script(src='vendor/libs/typeahead-js/typeahead.js'),    
     # Script(src='vendor/libs/apex-charts/apexcharts.js'),
     # Script(src='vendor/libs/swiper/swiper.js'),
-    # Script(src='vendor/libs/datatables-bs5/datatables-bootstrap5.js'),
-    
 
     # Script(src='js/dashboards-analytics.js')
 )

@@ -9,7 +9,8 @@ import requests
 
 def check_auth(request, session):
 
-    access_token = request.scope['access_token'] = session['access_token'] if 'access_token' in session else None    
+    access_token = request.scope['access_token'] = session['access_token'] if 'access_token' in session else None
+    request.scope['refresh_token'] = session['refresh_token'] if 'refresh_token' in session else None
 
     if not access_token:
         return RedirectResponse(url='/auth', status_code=303)
@@ -40,12 +41,10 @@ async def post(request: Request, session):
 
     print(f'username: {username}, password: {password}')
 
-    auth_server = HanzoClient(settings.HANZO_API_URI)
+    auth_server = HanzoClient(settings.HANZO_API_URI, session=session)
 
     try:
-        access_token, refresh_token = auth_server.login(username, password)        
-        session['access_token'] = access_token
-        session['refresh_token'] = refresh_token
+        auth_server.login(username, password)                
         session['user'] = auth_server.get_user_by_username(username)
     
         return Redirect('/')
