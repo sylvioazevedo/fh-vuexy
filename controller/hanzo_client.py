@@ -130,7 +130,7 @@ class HanzoClient():
 
             if 'msg' in data and data['msg'] == 'Token has expired':
                 self.refresh()
-                response = requests.request(url=url, method=method, headers=self.headers, **kwargs)                
+                response = requests.request(url=url, method=method, headers=self.headers, **kwargs)
 
                 if response.status_code != 200:
                     raise ConnectionError(f'Request failed: {response.status_code} - {response.reason}')
@@ -195,6 +195,13 @@ class HanzoClient():
         """
         find all by
         """
-        url = f'{self.api_url}/{collection}'
+        url = f'{self.api_url}/{collection}/find'
         return self.make_request(url, params=kwargs)
+    
+    def count(self, collection):
+        """
+        count
+        """
+        url = f'{self.api_url}/{collection}/count'
+        return self.make_request(url)
                   

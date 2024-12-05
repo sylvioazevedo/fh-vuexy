@@ -23,13 +23,14 @@ ftrs_ext = (
 user_app, rt = get_app(hdrs_ext=hdrs_ext, ftrs_ext=ftrs_ext)
 
 @rt('/')
-def index(session, sort=None, order=None, page=1, max=10, message=None):
+def index(session, sort:str =None, order: str=None, page: int=1, max: int=10, message:str =None):
 
     session['active'] = 'Users'
     hanzo = HanzoClient(HANZO_API_URI, session)
-    users = hanzo.find_all_by('user', sort=sort, order=order, page=page, max=max)
+    user_list = hanzo.find_all_by('user', sort=sort, order=order, page=page, max=max)
+    count = hanzo.count('user')
 
-    return UserIndexPage(session, message=message, users=users)
+    return UserIndexPage(session, message=message, users=user_list, page=page, count=count, max=max)
 
 @rt('/create')
 def get(session, message=None):
@@ -72,7 +73,7 @@ def post(user:dict, session):
     user['_id'] = resp['id']
 
     #return ShowUserPage(session, message=f'User [{resp['id']}:{user['username']}] successfully saved.', user=user)
-    return index(session, message=f'User [{resp['id']}:{user['username']}] successfully saved.')
+    return index(session, message=f'User [{resp['id']}:{user['username']}] successfully created.')
 
 @rt('/update')
 def post(user: dict, session):
@@ -89,4 +90,4 @@ def get(id: str, session):
     hanzo = HanzoClient(HANZO_API_URI, session)
     hanzo.delete_user(id)
     
-    return index(session, message=f'User [{id}] successfully updated.')
+    return index(session, message=f'User [{id}] successfully removed.')

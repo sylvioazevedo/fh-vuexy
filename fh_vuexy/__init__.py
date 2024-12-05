@@ -686,3 +686,57 @@ def TableActionButton(icon=None, href='#', cls='', **kw):
             cls=f'btn btn-sm btn-text-secondary rounded-pill btn-icon waves-effect {cls}',
             **kw
         )
+
+def paginate(total_items, page, per_page, max_pages=5):
+
+    total_pages = (total_items + per_page - 1) // per_page    
+    half_max_pages = max_pages // 2
+    
+    if total_pages <= max_pages:
+        page_range = range(1, total_pages + 1)
+    elif page <= half_max_pages:
+        page_range = range(1, max_pages + 1)
+    elif page > total_pages - half_max_pages:
+        page_range = range(total_pages - max_pages + 1, total_pages + 1)
+    else:
+        page_range = range(page - half_max_pages, page + half_max_pages + 1)
+
+    return page_range, total_pages
+
+def TablePagination(base_url, page, page_range, total_pages, cls='', **kw):
+
+    return \
+        Nav(
+            Ul(
+                Li(
+                    A(I(cls='tf-icon ti ti-chevrons-left ti-xs'), href=f'{base_url}?page={1}', tabindex='-1', cls='page-link') if page > 1 else None,
+                    cls='page-item' if page > 1 else 'page-item disabled'
+                ),                                
+                Li(
+                    A(I(cls='tf-icon ti ti-chevron-left ti-xs'), href=f'{base_url}?page={page-1}', tabindex='-1', cls='page-link') if page > 1 else None,
+                    cls='page-item' if page > 1 else 'page-item disabled'
+                ),
+                Li(
+                    A('...', href=f'#', cls='page-link') if page_range[0] > 1 else None,
+                    cls='page-item' if page_range[0] > 1 else 'page-item disabled',
+                ),
+                *[Li(
+                    A(str(p), href=f'{base_url}?page={p}', cls='page-link') if p != page else A(str(p), href='#', cls='page-link'),
+                    cls=f'{'page-item' if p != page else 'page-item active'}'
+                ) for p in page_range],                                
+                Li(
+                    A('...', href=f'#', cls='page-link') if page_range[-1] < total_pages else None,
+                    cls='page-item' if page_range[-1] < total_pages else 'page-item disabled',
+                ),
+                Li(
+                    A(I(cls='tf-icon ti ti-chevron-right ti-xs'), href=f'{base_url}?page={page+1}', cls='page-link') if page < total_pages else None,
+                    cls='page-item' if page < total_pages else 'page-item disabled'
+                ),
+                Li(
+                    A(I(cls='tf-icon ti ti-chevrons-right ti-xs'), href=f'{base_url}?page={total_pages}', cls='page-link') if page < total_pages else None,
+                    cls='page-item me-2' if page < total_pages else 'page-item disabled'
+                ),
+                cls='pagination pagination-sm justify-content-end me-2'
+            ),
+            aria_label='...'
+        ) if total_pages > 1 else None
