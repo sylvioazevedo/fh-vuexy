@@ -10,8 +10,7 @@ def NewUserPage(session, *args, **kwargs):
 
     return \
         MainLayout(f'{APP_NAME} - New User',
-            Page(
-                None,                
+            FormPage(                
                 Div(
                     Div(
                         Div(

@@ -1,4 +1,5 @@
 from fasthtml.common import *
+from fasthtml.core import FT
 from enum import Enum
 
 def asset(s): return Path(__file__).parent/'assets'/s
@@ -637,6 +638,14 @@ def Page(title, *c, cls='', **kw):
             **kw
         )
 
+def FormPage(*c, cls='', **kw):
+    return \
+        ContentWrapper(            
+            *c,
+            cls=cls,
+            **kw
+        )
+
 def TextBody(*c):
     return Div(*c, cls='text-body')
 
@@ -740,3 +749,26 @@ def TablePagination(base_url, page, page_range, total_pages, cls='', **kw):
             ),
             aria_label='...'
         ) if total_pages > 1 else None
+
+def TableRow(*c, cls='', **kw):
+    return Td(*c, cls=cls, **kw)
+
+def SimpleTable(headers, rows, cls='', **kw):
+
+    return \
+        Table(
+            Thead(
+                Tr(
+                    *[Th(h) for h in headers]
+                )
+            ),
+            Tbody(
+                *[Tr(
+                    *[r for r in row],
+                    cls='table-light' if i % 2 == 0 else '',
+                ) for i, row in enumerate(rows)],
+                cls='table-border-bottom-0'
+            ),
+            cls=f'table table-sm table-hover {cls}',
+            **kw
+        )

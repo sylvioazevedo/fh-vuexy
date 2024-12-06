@@ -9,8 +9,7 @@ def ShowUserPage(session, *args, **kwargs):
 
     return \
         MainLayout(f'{APP_NAME} - Show User',       
-            Page(
-                None,                
+            FormPage(                
                 Div(
                     Div(
                         Div(

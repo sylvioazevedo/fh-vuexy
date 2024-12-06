@@ -3,7 +3,6 @@ from fh_vuexy import *
 def LeftMenu(session):
 
     access_token = session['access_token'] if 'access_token' in session else None
-
     items = (VerticalMenuItem('Dashboard', icon='ti ti-home', href='/', active=session['active'] == 'Dashboard'), Divider())
 
     if access_token:

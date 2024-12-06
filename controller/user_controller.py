@@ -1,4 +1,4 @@
-from controller.hanzo_client import HanzoClient
+from services.hanzo_client import HanzoClient
 from engine import get_app
 from etc.settings import APP_NAME, HANZO_API_URI
 from fh_vuexy import Link, Script, Redirect
@@ -50,10 +50,10 @@ def get(id: str, session, message=None):
     return ShowUserPage(session, message=message, user=user)
 
 @rt('/edit/{id}')
-def get(id:str, session, message=None):
+def edit(id:str, session, message=None, error=None):
     hanzo = HanzoClient(HANZO_API_URI, session)
     user = hanzo.get_user(id)
-    roles = hanzo.list_roles()
+    roles = hanzo.list('role')
     return EditUserPage(session, message=message, user=user, roles=roles)
 
 @rt('/dt')
@@ -78,11 +78,14 @@ def post(user:dict, session):
 @rt('/update')
 def post(user: dict, session):
 
-    print(user)
-    hanzo = HanzoClient(HANZO_API_URI, session)
-    hanzo.update_user(user)
+    try:
+        hanzo = HanzoClient(HANZO_API_URI, session)
+        hanzo.update_user(user)
+        
+        return index(session, message=f'User [{user["_id"]}:{user["username"]}] successfully updated.')
     
-    return index(session, message=f'User [{user["_id"]}:{user["username"]}] successfully updated.')
+    except Exception as e:        
+        return edit(user['_id'], session, error=f'Error updating user [{user["username"]}] - {str(e)}')
 
 @rt('/delete/{id}')
 def get(id: str, session):

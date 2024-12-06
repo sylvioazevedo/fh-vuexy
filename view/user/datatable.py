@@ -1,4 +1,4 @@
-from controller.hanzo_client import HanzoClient
+from services.hanzo_client import HanzoClient
 from etc.settings import APP_NAME, HANZO_API_URI
 from fh_vuexy import *
 from view.templates.main_layout import MainLayout

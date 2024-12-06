@@ -1,11 +1,9 @@
-from engine import get_app
-from controller.hanzo_client import HanzoClient
 from datetime import datetime as dt
+from engine import get_app
 from etc import settings
 from fh_vuexy import *
+from services.hanzo_client import HanzoClient
 from view.auth import LoginPage
-
-import requests
 
 def check_auth(request, session):
 

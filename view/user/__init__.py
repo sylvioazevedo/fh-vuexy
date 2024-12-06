@@ -14,8 +14,7 @@ def UserIndexPage(session, **kwargs):
 
     return \
         MainLayout(f'{APP_NAME} - Users',
-            Page(
-                None,
+            FormPage(
                 Div(
                     Div(
                         Div(
@@ -30,36 +29,21 @@ def UserIndexPage(session, **kwargs):
                             ),
                             cls='card-header d-flex justify-content-between align-items-center'
                         ),
-                        Table(
-                            Thead(
-                                Tr(
-                                    Th('Name'),
-                                    Th('Username'),
-                                    Th('Email'),
-                                    Th('Role'),
-                                    Th('Actions'),
-                                )
-                            ),
-                            Tbody(
-                                *[Tr(
-                                    Td(
-                                        A(user['name'], href=f'/user/show/{user["_id"]["$oid"]}')
-                                    ),
-                                    Td(
-                                        A(user['username'], href=f'/user/show/{user["_id"]["$oid"]}')
-                                    ),
-                                    Td(user['email'] if 'email' in user else '-'),
-                                    Td(user['role'] if 'role' in user else '-'),
-                                    Td(
+                        SimpleTable(
+                            headers = ['Name', 'Username', 'Email', 'Role', 'Actions'],
+                            rows=[ 
+                                [
+                                    TableRow(A(user['name'], href=f'/user/show/{user["_id"]["$oid"]}')),
+                                    TableRow(A(user['username'], href=f'/user/show/{user["_id"]["$oid"]}')),
+                                    TableRow(user['email'] if 'email' in user else '-'),
+                                    TableRow(user['role'] if 'role' in user else '-'),
+                                    TableRow(
                                         TableActionButton(href=f'/user/edit/{user["_id"]["$oid"]}', icon='ti ti-pencil', cls='btn-text-primary'),
-                                        TableActionButton(href=f'/user/delete/{user["_id"]["$oid"]}', icon='ti ti-trash', cls='btn-text-danger', onclick='return confirm("Are you sure you want to delete this user?")'),
-                                        width='20px',
-                                    ),
-                                    cls='table-light' if i % 2 == 0 else '',
-                                ) for i, user in enumerate(users)],
-                                cls='table-border-bottom-0'
-                            ),
-                            cls='table table-sm table-hover mb-3'
+                                        TableActionButton(href=f'/user/delete/{user["_id"]["$oid"]}', icon='ti ti-trash', cls='btn-text-danger', onclick='return confirm("Are you sure you want to delete this user?")'),                                        
+                                        width='20px'
+                                    )
+                                ] for user in users
+                            ],                            
                         ),
                         TablePagination('/user', page, page_range, total_pages),
                         cls='table-responsive text-nowrap'
