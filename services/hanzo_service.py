@@ -1,12 +1,13 @@
 from datetime import datetime as dt
+from etc.settings import HANZO_API_URI
 
 import requests
 
-class HanzoClient():
+class HanzoService():
 
-    def __init__(self, api_url:str=None, session=None):
+    def __init__(self, session=None):
 
-        self.api_url = api_url if api_url else 'http://127.0.0.1:35777'
+        self.api_url = HANZO_API_URI if HANZO_API_URI else 'http://127.0.0.1:35777'
 
         # set headers
         self.headers = {
@@ -140,44 +141,44 @@ class HanzoClient():
     
         return response.json()
 
-    def list_users(self):
+    def list(self, collection):
         """
-        list all users
+        list all documents in a collection
         """
-        url = f'{self.api_url}/user'
+        url = f'{self.api_url}/{collection}'
         
         return self.make_request(url)
         
 
-    def insert_user(self, user):
+    def insert(self, collection, doc):
         """
-        insert a user
+        insert a document into a collection
         """
-        url = f'{self.api_url}/user'
-        return self.make_request(url, method='POST', json=user)
+        url = f'{self.api_url}/{collection}'
+        return self.make_request(url, method='POST', json=doc)
     
-    def update_user(self, user):
+    def update(self, collection, doc):
         """
-        update a user
+        update a document in a collection
         """
-        url = f'{self.api_url}/user'
-        return self.make_request(url, method='PUT', json=user)
+        url = f'{self.api_url}/{collection}'
+        return self.make_request(url, method='PUT', json=doc)
     
-    def delete_user(self, user_id):
+    def delete(self, collection, id):
         """
-        delete a user
+        delete a document with [id] in a collection
         """
-        url = f'{self.api_url}/user/{user_id}'
+        url = f'{self.api_url}/{collection}/{id}'
         return self.make_request(url, method='DELETE')
     
-    def get_user(self, user_id):
+    def find_by_id(self, collection, id):
         """
-        get a user
+        get a document with [id] in a collection
         """
-        url = f'{self.api_url}/user/{user_id}'
+        url = f'{self.api_url}/{collection}/{id}'
         return self.make_request(url)        
     
-    def get_user_by_username(self, username):
+    def find_user_by_username(self, username):
         """
         get a user
         """

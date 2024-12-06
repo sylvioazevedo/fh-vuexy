@@ -1,4 +1,4 @@
-from services.hanzo_client import HanzoClient
+from services.hanzo_service import HanzoService
 from etc.settings import APP_NAME, HANZO_API_URI
 from fh_vuexy import *
 from view.templates.main_layout import MainLayout
@@ -7,7 +7,7 @@ def DatatablePage(session, message = None):
 
     session['active'] = 'Users'
 
-    hanzo = HanzoClient(api_url=HANZO_API_URI, session=session)
+    hanzo = HanzoService(api_url=HANZO_API_URI, session=session)
     hanzo.set_access_token(session['access_token'])
     hanzo.set_refresh_token(session['refresh_token'])
 

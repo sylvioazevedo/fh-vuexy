@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from engine import get_app
 from etc import settings
 from fh_vuexy import *
-from services.hanzo_client import HanzoClient
+from services.hanzo_service import HanzoService
 from view.auth import LoginPage
 
 def check_auth(request, session):
@@ -39,11 +39,11 @@ async def post(request: Request, session):
 
     print(f'username: {username}, password: {password}')
 
-    auth_server = HanzoClient(settings.HANZO_API_URI, session=session)
+    auth_server = HanzoService(session=session)
 
     try:
         auth_server.login(username, password)                
-        session['user'] = auth_server.get_user_by_username(username)
+        session['user'] = auth_server.find_user_by_username(username)
     
         return Redirect('/')
     
