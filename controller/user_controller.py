@@ -30,7 +30,7 @@ def index(session, sort:str =None, order: str=None, page: int=1, max: int=10, me
     user_list = service.find_all_by('user', sort=sort, order=order, page=page, max=max)
     count = service.count('user')
 
-    return UserIndexPage(session, message=message, users=user_list, page=page, count=count, max=max)
+    return UserIndexPage(session, message=message, user_list=user_list, page=page, count=count, max=max)
 
 @rt('/create')
 def get(session, message=None):
