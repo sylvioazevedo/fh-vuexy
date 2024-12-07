@@ -20,20 +20,29 @@ def render_template(domain, fields, template, type: str='view'):
 
     tpl = te.get_template(f'{template}.tpl')
 
-    outputText = tpl.render(domain=domain, fields=fields)
+    outputText = tpl.render(domain=domain, fields=fields)    
+    
+    if type == 'view':
+        target_path = f"./{type}/{domain}"
+        
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
 
-    target_path = f"./{type}/{domain}"
+        target_file = f"{target_path}/{template}.py"
 
-    if not os.path.exists(target_path):
-        os.makedirs(target_path)
+    else:
+        target_path = f"./{type}"
+        
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
 
-    tager_file = f"{target_path}/{template}{'' if type == 'view' else f'_{type}'}.py"
+        target_file = f"{target_path}/{domain}_{type}.py"
 
-    with open(tager_file, "w") as f:
+    with open(target_file, "w") as f:
         f.write(outputText) 
         f.flush()
 
-    print(f"Generated {type} for domain {domain}: {tager_file}")
+    print(f"Generated {type} for domain {domain}: {target_file}")
 
 def load_fields(domain: str):
 
