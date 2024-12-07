@@ -5,10 +5,7 @@ import importlib.util
 import os
 import jinja2 as jj2
 
-target_path = "./kenkun/dist/views/"
-
-tl = jj2.FileSystemLoader(searchpath="./kenkun/templates")
-te = jj2.Environment(loader=tl)
+template_path = "./kenkun/templates"
 
 def load_module_from_file(file_path, module_name):
     spec = importlib.util.spec_from_file_location(module_name, file_path)
@@ -16,7 +13,29 @@ def load_module_from_file(file_path, module_name):
     spec.loader.exec_module(module)
     return module
 
-def generate_views(domain: str):
+def render_template(domain, fields, template, type: str='view'):
+
+    tl = jj2.FileSystemLoader(searchpath=f'{template_path}/{type}')
+    te = jj2.Environment(loader=tl)
+
+    tpl = te.get_template(f'{template}.tpl')
+
+    outputText = tpl.render(domain=domain, fields=fields)
+
+    target_path = f"./{type}/{domain}"
+
+    if not os.path.exists(target_path):
+        os.makedirs(target_path)
+
+    tager_file = f"{target_path}/{template}{'' if type == 'view' else f'_{type}'}.py"
+
+    with open(tager_file, "w") as f:
+        f.write(outputText) 
+        f.flush()
+
+    print(f"Generated {type} for domain {domain}: {tager_file}")
+
+def load_fields(domain: str):
 
     domain_file_path = f"./domain/{domain}.py"
     module_name = os.path.splitext(os.path.basename(domain_file_path))[0]
@@ -24,25 +43,52 @@ def generate_views(domain: str):
     # Load the module
     domain_module = load_module_from_file(domain_file_path, module_name)
     
-    # Access an object from the module (e.g., a class or function)
-    # Replace 'ObjectName' with the actual name of the object you want to access
-    _c = getattr(domain_module, domain.title(), None)     
+    # Access an object from the module (e.g., a class or function
+    _c = getattr(domain_module, domain.title(), None)
 
-    if not _c:        
-        raise Exception(f"Object 'ObjectName' not found in {domain_file_path}")        
-
-    fields = dataclasses.fields(_c)  
+    if not _c:
+        raise Exception(f"Object 'ObjectName' not found in {domain_file_path}")
     
-    template = te.get_template("__init__.py")
+    fields = dataclasses.fields(_c)
 
-    outputText = template.render(domain=domain, fields=fields)
+    return fields
 
-    if not os.path.exists(f"{target_path}{domain}"):
-        os.makedirs(f"{target_path}{domain}")
+    
+def generate_views(domain: str):
 
-    with open(f"{target_path}{domain}/__init__.py", "w") as f:
-        f.write(outputText)
+    fields = load_fields(domain)
+
+    # generate crud views
+    print(f'Creating views for domain: {domain}')
+    render_template(domain, fields, '__init__')
+    render_template(domain, fields, 'create')
+    render_template(domain, fields, 'show')
+    render_template(domain, fields, 'edit')
 
     print(f"Generated {domain} views")
 
+
+def generate_controller(domain: str):
+
+    fields = load_fields(domain)
+
+    # generate crud views
+    print(f'Creating controller for domain: {domain}')
+    render_template(domain, fields, 'controller', 'controller')
+    print(f"Generated {domain} controller")
+
+def generate_service(domain: str):
+
+    fields = load_fields(domain)
+
+    # generate crud views
+    print(f'Creating service for domain: {domain}')
+    render_template(domain, fields, 'service', 'service')
+    print(f"Generated {domain} service")
+
+
+def generate_all(domain: str):
+    
+    generate_views(domain)
+    generate_controller(domain)
     

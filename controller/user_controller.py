@@ -1,4 +1,4 @@
-from services.hanzo_service import HanzoService
+from service.hanzo_service import HanzoService
 from engine import get_app
 from etc.settings import APP_NAME, HANZO_API_URI
 from fh_vuexy import Link, Script, Redirect

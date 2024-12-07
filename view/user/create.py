@@ -3,9 +3,11 @@ from fh_vuexy import *
 from view.templates.main_layout import MainLayout
 
 
-def NewUserPage(session, *args, **kwargs):
+def NewUserPage(session, *args, **kwargs):    
     
-    roles = kwargs.get('roles', [])
+    role_list = ["admin", "user"]    
+    
+
     message = kwargs.get('message', None)
 
     return \
@@ -24,39 +26,55 @@ def NewUserPage(session, *args, **kwargs):
                         Form(
                             Div(
                                 Div(
+                                    Label('Username', _for='username'),
+                                    Input(id='username', name='username', type='text', cls='form-control', placeholder='Username', required=True),                                    
+                                    Div('Field [username] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'                        
+                                ),
+                                Div(
+                                    Label('Password', _for='password'),
+                                    Input(id='password', name='password', type='password', cls='form-control', placeholder='********', required=True),
+                                    Div('Please inform a password.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
                                     Label('Name', _for='name'),
                                     Input(id='name', name='name', type='text', cls='form-control', placeholder='Name', required=True),                                    
-                                    Div('Please enter your name.', cls='invalid-feedback'),
+                                    Div('Field [name] is required.', cls='invalid-feedback'),
                                     cls='col-md-6 mb-3'                        
                                 ),
                                 Div(
                                     Label('Email', _for='email'),
                                     Input(id='email', name='email', type='email', cls='form-control', placeholder='E-mail: joe@doe.com', required=True),
-                                    Div('Please enter your e-mail. [x@x.com.x]', cls='invalid-feedback'),
-                                    cls='col-md-6 mb-3'
-                                ),
-                                Div(
-                                    Label('Username', _for='username'),
-                                    Input(id='username', name='username', type='text', cls='form-control', placeholder='Username', required=True),
-                                    Div('Please enter your username.', cls='invalid-feedback'),
-                                    cls='col-md-6 mb-3'
-                                ),                                  
-                                Div(
-                                    Label('Password', _for='email'),
-                                    Input(id='password', name='password', type='password', cls='form-control', placeholder='********', required=True),
-                                    Div('Please enter your password.', cls='invalid-feedback'),
+                                    Div('Field [e-mail] is required. [x@x.com.x]', cls='invalid-feedback'),
                                     cls='col-md-6 mb-3'
                                 ),
                                 Div(
                                     Label('Role', _for='role'),
                                     Select(
                                         Option('Select Role', value=True, disable=True, selected=True),
-                                        *[Option(role['role'], value=role['role']) for role in roles],
+                                        *[Option(value, value=value) for value in role_list],
                                         id='role', name='role', cls='form-select', required=True
                                     ),                                                                        
-                                    Div('Please select a role.', cls='invalid-feedback'),
+                                    Div('Please select a Role.', cls='invalid-feedback'),
                                     cls='col-md-6 mb-3'
-                                ),                             
+                                ),                                
+                                Div(                  
+                                    Div(                  
+                                        Input(id='enabled', name='enabled', type='checkbox', cls='form-check-input'),
+                                        Label('Enabled', _for='enabled', cls='form-check-label'),
+                                        cls='form-check form-switch form-check-primary'
+                                    ),
+                                    cls='col-md-12 mb-3'
+                                ),                                
+                                Div(                  
+                                    Div(                  
+                                        Input(id='expired', name='expired', type='checkbox', cls='form-check-input'),
+                                        Label('Expired', _for='expired', cls='form-check-label'),
+                                        cls='form-check form-switch form-check-primary'
+                                    ),
+                                    cls='col-md-12 mb-3'
+                                ),                                
                                 cls='row g-6'
                             ),
                             Div(

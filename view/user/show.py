@@ -1,3 +1,4 @@
+from dateutil.parser import isoparse
 from etc.settings import APP_NAME
 from fh_vuexy import *
 from view.templates.main_layout import MainLayout
@@ -23,23 +24,48 @@ def ShowUserPage(session, *args, **kwargs):
                         Form(
                             Div(
                                 Div(
-                                    Label('Name', for_='Name', cls='form-label'),
-                                    Span(user['name'] if 'name' in user else '-', cls='form-control-plaintext'),
-                                    cls='col-md-6 mb-3'
-                                ),                                
-                                Div(
-                                    Label('Email', for_='email'),
-                                    Span(user['email'] if 'email' in user else '-', cls='form-control-plaintext'),
+                                    Label('Date Created', for_='date_created', cls='form-label'),
+                                    Span((isoparse(user['date_created']['$date']).strftime("%Y-%m-%d %H:%M:%S") if user['date_created'] else '-') if 'date_created' in user else '-', cls='form-control-plaintext'),
                                     cls='col-md-6 mb-3'
                                 ),
                                 Div(
-                                    Label('username', for_='username', cls='form-label'),
+                                    Label('Last Updated', for_='last_updated', cls='form-label'),
+                                    Span((isoparse(user['last_updated']['$date']).strftime("%Y-%m-%d %H:%M:%S") if user['last_updated'] else '-') if 'last_updated' in user else '-', cls='form-control-plaintext'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
+                                    Label('Expiration Date', for_='expiration_date', cls='form-label'),
+                                    Span((isoparse(user['expiration_date']['$date']).strftime("%Y-%m-%d %H:%M:%S") if user['expiration_date'] else '-') if 'expiration_date' in user else '-', cls='form-control-plaintext'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
+                                    Label('Username', for_='username', cls='form-label'),
                                     Span(user['username'] if 'username' in user else '-', cls='form-control-plaintext'),
                                     cls='col-md-6 mb-3'
                                 ),
                                 Div(
-                                    Label('Role', for_='role'),
-                                    Span(user['role'] if 'role' in user else '-', cls='form-control-plaintext'),                                    
+                                    Label('Name', for_='name', cls='form-label'),
+                                    Span(user['name'] if 'name' in user else '-', cls='form-control-plaintext'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
+                                    Label('Email', for_='email', cls='form-label'),
+                                    Span(user['email'] if 'email' in user else '-', cls='form-control-plaintext'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
+                                    Label('Role', for_='role', cls='form-label'),
+                                    Span(user['role'] if 'role' in user else '-', cls='form-control-plaintext'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
+                                    Label('Enabled', for_='enabled', cls='form-label'),
+                                    Span(user['enabled'] if 'enabled' in user else '-', cls='form-control-plaintext'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                Div(
+                                    Label('Expired', for_='expired', cls='form-label'),
+                                    Span(user['expired'] if 'expired' in user else '-', cls='form-control-plaintext'),
                                     cls='col-md-6 mb-3'
                                 ),
                                 Div(

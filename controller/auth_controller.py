@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from engine import get_app
 from etc import settings
 from fh_vuexy import *
-from services.hanzo_service import HanzoService
+from service.hanzo_service import HanzoService
 from view.auth import LoginPage
 
 def check_auth(request, session):
