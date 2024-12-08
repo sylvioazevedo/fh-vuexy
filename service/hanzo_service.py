@@ -117,8 +117,8 @@ class HanzoService():
 
         return response.json()
     
-    def make_request(self, url, **kwargs):
-
+    def make_request(self, url, **kwargs):                
+    
         method = kwargs.get('method', 'GET')
 
         if 'method' in kwargs:
@@ -134,10 +134,10 @@ class HanzoService():
                 response = requests.request(url=url, method=method, headers=self.headers, **kwargs)
 
                 if response.status_code != 200:
-                    raise ConnectionError(f'Request failed: {response.status_code} - {response.reason}')
+                    raise ConnectionError(f'Request failed: {response.status_code} - {response.reason}<br/>URL: {url} - KWARGS: {kwargs}')
 
-            else:
-                raise ConnectionError(f'Request failed: {response.status_code} - {response.reason}')            
+            else:                
+                raise ConnectionError(f'Request failed: {response.status_code} - {response.reason}<br/>URL: {url} - KWARGS: {kwargs}')            
     
         return response.json()
 

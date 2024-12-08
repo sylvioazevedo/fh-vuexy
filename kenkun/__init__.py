@@ -61,7 +61,6 @@ def load_fields(domain: str):
     fields = dataclasses.fields(_c)
 
     return fields
-
     
 def generate_views(domain: str):
 
@@ -76,7 +75,6 @@ def generate_views(domain: str):
 
     print(f"Generated {domain} views")
 
-
 def generate_controller(domain: str):
 
     fields = load_fields(domain)
@@ -85,16 +83,6 @@ def generate_controller(domain: str):
     print(f'Creating controller for domain: {domain}')
     render_template(domain, fields, 'controller', 'controller')
     print(f"Generated {domain} controller")
-
-def generate_service(domain: str):
-
-    fields = load_fields(domain)
-
-    # generate crud views
-    print(f'Creating service for domain: {domain}')
-    render_template(domain, fields, 'service', 'service')
-    print(f"Generated {domain} service")
-
 
 def generate_all(domain: str):
     

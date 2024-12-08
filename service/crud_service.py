@@ -21,7 +21,7 @@ class CrudService():
         # set authorization header
         self.headers['Authorization'] = ('Bearer ' + self.session['access_token']) if 'access_token' in self.session else None    
         
-    def set_access_token(self, accessa_token:str):
+    def set_access_token(self, access_token:str):
         """
         set the access token
         """

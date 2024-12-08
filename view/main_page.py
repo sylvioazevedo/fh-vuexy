@@ -1,14 +1,18 @@
 from fh_vuexy import *
 from view.templates.main_layout import MainLayout
 
-def MainPage(session):
+def MainPage(session, **kwargs):
 
-    session['active'] = 'Dashboard'
+    session['active'] = 'Dashboard'    
+
+    # check if there is a error message
+    error = session.pop('error', None)
 
     return \
         MainLayout('Vuejs Vuexy Template',
-            Page(
+            Page(                
                 'Dashboard',
+                Alert( f'{error}', type=AlertTypeT.Danger) if error else None,
                 P(
                     'Sample page.',
                     Br(),
