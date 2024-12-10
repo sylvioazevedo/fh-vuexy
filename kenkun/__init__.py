@@ -2,9 +2,10 @@ from datetime import datetime as dt
 
 import dataclasses
 import importlib.util
-import os
 import jinja2 as jj2
+import os
 
+# constants
 template_path = "./kenkun/templates"
 
 def load_module_from_file(file_path, module_name):
@@ -88,4 +89,3 @@ def generate_all(domain: str):
     
     generate_views(domain)
     generate_controller(domain)
-    
