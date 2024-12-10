@@ -19,7 +19,10 @@ beforeware = Beforeware(
                     '/', '/auth', '/login',                     # routes
                     r'/favicon\.ico',                           # files
                     r'/img/.*', r'/audio/.*',                   # folders
-                    r'.*\.css', r'.*\.js', r'.*\.map', r'.*\.svg',  # file extensions
+
+                    # file extensions
+                    r'.*\.css', r'.*\.js', r'.*\.map', r'.*\.svg', r'.*\.jpg', r'.*\.jpg', r'.*\.png', r'.*\.ico',
+                    r'.*\.mp3', r'.*\.wav', r'.*\.ogg', r'.*\.woff2', r'.*\.woff', r'.*\.ttf', r'.*\.eot', r'.*\.otf'
                 ]
             )
 
