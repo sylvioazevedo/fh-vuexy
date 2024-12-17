@@ -8,7 +8,7 @@ def Edit{{domain.title()}}Page(session, **kwargs):
     {{domain}} = kwargs.get('{{domain}}', {})
     {% for field in fields -%}
     {% if (field.metadata and 'list' in field.metadata) -%}
-    {{field.name}}_list = {{field.metadata|string|replace('list: ', '') }}    
+    {{field.name}}_list = {{get_list_from_metadata(field.metadata|string)}}
     {% endif -%}
     {% endfor %}
     

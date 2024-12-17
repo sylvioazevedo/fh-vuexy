@@ -3,11 +3,12 @@ from fh_vuexy import *
 from view.templates.main_layout import MainLayout
 
 
+
 def New{{domain.title()}}Page(session, *args, **kwargs):    
     
     {% for field in fields -%}
     {% if (field.metadata and 'list' in field.metadata) -%}
-    {{field.name}}_list = {{field.metadata|string|replace('list: ', '') }}    
+    {{field.name}}_list = {{get_list_from_metadata(field.metadata|string)}}
     {% endif -%}
     {% endfor %}
 

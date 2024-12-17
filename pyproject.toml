@@ -1,7 +1,7 @@
 [project]
 name = "fh-vuexy"
 version = "0.1.0"
-description = "Add your description here"
+description = "Base project for Vue.js and Flask"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

@@ -3,9 +3,10 @@ from fh_vuexy import *
 from view.templates.main_layout import MainLayout
 
 
+
 def NewUserPage(session, *args, **kwargs):    
     
-    role_list = ["admin", "user"]    
+    role_list = ['admin', ' user']    
     
 
     message = kwargs.get('message', None)

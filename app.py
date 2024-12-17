@@ -1,7 +1,9 @@
 from base.engine import get_app
 
-from controller.user_controller import user_app as user_routes
+
 from controller.auth_controller import auth_app as auth_routes, beforeware
+from controller.user_controller import user_app as user_routes
+from controller.test_controller import test_app as test_routes
 
 from view.cards_page import CardsPage
 from view.forms_page import FormsPage
@@ -20,6 +22,7 @@ exception_handlers = {
 routes = [
     Mount('/auth', auth_routes, name='auth'),
     Mount('/user', user_routes, name='user'),
+    Mount('/test', test_routes, name='test'),
 ]
 
 app, rt = get_app(routes=routes, before=beforeware, exception_handlers=exception_handlers)

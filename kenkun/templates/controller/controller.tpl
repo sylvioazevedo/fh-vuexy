@@ -1,7 +1,7 @@
 
 from base.engine import get_app
 from fh_vuexy import Link, Script, Redirect
-from service.crud_service import CrudService
+from service.crud_service import CrudService as {{domain.title()}}Service
 
 from view.{{domain}} import {{domain.title()}}IndexPage
 from view.{{domain}}.create import New{{domain.title()}}Page
@@ -35,6 +35,10 @@ def index(session, sort:str =None, order: str=None, page: int=1, max: int=10, me
         return {{domain.title()}}IndexPage(session, message=message, {{domain}}_list={{domain}}_list, page=page, count=count, max=max)
 
     except Exception as e:
+
+        if e.args[0] == 404:            
+            return TestIndexPage(session, message='No {{domain}}s found.', test_list=[], page=1, count=0, max=10)
+
         session['error'] = f'{str(e)}'
         return Redirect('/')
 
@@ -98,7 +102,7 @@ def post({{domain}}: dict, session):
         service = {{domain.title()}}Service(session)
         service.update('{{domain}}', {{domain}})
         
-        return index(session, message=f'{{domain.title()}} [{{domain}}["_id"]] successfully updated.')
+        return index(session, message=f'{{domain.title()}} [{{'{'}}{{domain}}["_id"]}] successfully updated.')
     
     except Exception as e:        
         return edit({{domain}}['_id'], session, error=f'Error updating {{domain}} [{{'{'}}{{domain}}["_id"]}] - {str(e)}')

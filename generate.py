@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from kenkun import generate_all, generate_controller, generate_views
+from kenkun import generate_all, generate_controller, generate_domain, generate_views
 
 import sys
 
@@ -25,5 +25,8 @@ if action == 'controller':
 
 if action == 'views':
     generate_views(domain)
+
+if action == 'domain':
+    generate_domain(domain)
 
 print(f"Completed in {dt.now() - begin} ms")

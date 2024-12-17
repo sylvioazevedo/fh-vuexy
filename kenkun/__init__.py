@@ -1,9 +1,11 @@
 from datetime import datetime as dt
+from kenkun.util.fields import get_list_from_metadata
 
 import dataclasses
 import importlib.util
 import jinja2 as jj2
 import os
+
 
 # constants
 template_path = "./kenkun/templates"
@@ -19,6 +21,11 @@ def render_template(domain, fields, template, type: str='view'):
     tl = jj2.FileSystemLoader(searchpath=f'{template_path}/{type}')
     te = jj2.Environment(loader=tl)
 
+    te.globals.update({
+        'get_list_from_metadata': get_list_from_metadata,
+        'dt': dt
+    })
+
     tpl = te.get_template(f'{template}.tpl')
 
     outputText = tpl.render(domain=domain, fields=fields)    
@@ -31,13 +38,22 @@ def render_template(domain, fields, template, type: str='view'):
 
         target_file = f"{target_path}/{template}.py"
 
-    else:
+    elif type == 'controller':
         target_path = f"./{type}"
         
         if not os.path.exists(target_path):
             os.makedirs(target_path)
 
         target_file = f"{target_path}/{domain}_{type}.py"
+
+    else:
+        target_path = f"./{type}"
+        
+        if not os.path.exists(target_path):
+            os.makedirs(target_path)
+
+        target_file = f"{target_path}/{domain}.py"
+
 
     with open(target_file, "w") as f:
         f.write(outputText) 
@@ -84,6 +100,13 @@ def generate_controller(domain: str):
     print(f'Creating controller for domain: {domain}')
     render_template(domain, fields, 'controller', 'controller')
     print(f"Generated {domain} controller")
+
+def generate_domain(domain: str):    
+
+    # generate crud views
+    print(f'Creating : {domain}')
+    render_template(domain, None, 'domain', 'domain')
+    print(f"Generated {domain} domain")
 
 def generate_all(domain: str):
     

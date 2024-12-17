@@ -23,6 +23,6 @@ def LeftMenu(session):
         VerticalMenu(
             'layout-menu',
             items,
-            brand_logo=Img(src='/img/logo/vuexy.svg', alt='brand-logo', class_='brand-logo'),
+            brand_logo=Img(src='/img/logo/st_logo.png', alt='brand-logo', width=24, cls='brand-logo'),
             brand_text='Vuexy'                
         ),
