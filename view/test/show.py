@@ -45,7 +45,7 @@ def ShowTestPage(session, *args, **kwargs):
                                 ),
                                 Div(
                                     Label('Birthday', for_='birthday', cls='form-label'),
-                                    Span((isoparse(test['birthday']['$date']).strftime("%Y-%m-%d %H:%M:%S") if test['birthday'] else '-') if 'birthday' in test else '-', cls='form-control-plaintext'),
+                                    Span(test['birthday'] if 'birthday' in test else '-', cls='form-control-plaintext'),
                                     cls='col-md-6 mb-3'
                                 ),
                                 Div(

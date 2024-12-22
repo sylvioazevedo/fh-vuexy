@@ -77,7 +77,20 @@ def Edit{{domain.title()}}Page(session, **kwargs):
                                     ),
                                     cls='col-md-12 mb-3'
                                 ),
-                                {% else -%}
+                                {% elif field.type.__name__ == 'datetime' and field.name != 'date_created' and field.name != 'last_updated' -%}
+                                Div(
+                                    Label('{{field.name.replace('_', ' ').title()}}', _for='{{field.name}}'),
+                                    Input(id='{{field.name}}', name='{{field.name}}', type='datetime-local', cls='form-control', value={{domain}}['{{field.name}}'] if '{{field.name}}' in {{domain}} else '', required=True),
+                                    Div('Field [{{field.name}}] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                {% elif field.type.__name__ == 'date' -%}
+                                Div(
+                                    Label('{{field.name.replace('_', ' ').title()}}', _for='{{field.name}}'),
+                                    Input(id='{{field.name}}', name='{{field.name}}', type='date', cls='form-control', value={{domain}}['{{field.name}}'] if '{{field.name}}' in {{domain}} else '', required=True),
+                                    Div('Field [{{field.name}}] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),     
                                 {% endif -%}
                                 {% endif -%}
                                 {% endfor -%}

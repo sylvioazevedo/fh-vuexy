@@ -93,7 +93,7 @@ def post({{domain}}:dict, session):
         return index(session, message=f'{{domain.title()}} [{resp['id']}:{{'{'}}{{domain}}['_id']}] successfully created.')
 
     except Exception as e:
-        return edit({{domain}}['_id'], session, error=f'Error updating {{domain}} [{{'{'}}{{domain}}["_id"]}] - {str(e)}')
+        return edit({{domain}}['_id'], session, error=f'Error saving {{domain}} [{{'{'}}{{domain}}["_id"]}] - {str(e)}')
 
 @rt('/update')
 def post({{domain}}: dict, session):

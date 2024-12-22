@@ -33,10 +33,16 @@ def NewTestPage(session, *args, **kwargs):
                                 ),
                                 Div(
                                     Label('Description', _for='description'),
-                                    Input(id='description', name='description', type='text', cls='form-control', placeholder='Description', required=True),                                    
+                                    Textarea(id='description', name='description', cls='form-control', placeholder='Description', required=True),
                                     Div('Field [description] is required.', cls='invalid-feedback'),
-                                    cls='col-md-6 mb-3'                        
+                                    cls='col-md-6 mb-3'
                                 ),
+                                Div(
+                                    Label('Birthday', _for='birthday'),
+                                    Input(id='birthday', name='birthday', type='date', cls='form-control', required=True),
+                                    Div('Field [birthday] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),                                
                                 cls='row g-6'
                             ),
                             Div(

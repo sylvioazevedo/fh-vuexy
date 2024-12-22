@@ -56,6 +56,13 @@ def New{{domain.title()}}Page(session, *args, **kwargs):
                                     Input(id='email', name='email', type='email', cls='form-control', placeholder='E-mail: joe@doe.com', required=True),
                                     Div('Field [e-mail] is required. [x@x.com.x]', cls='invalid-feedback'),
                                     cls='col-md-6 mb-3'
+                                ),                                
+                                {% elif (field.metadata and 'text' in field.metadata) -%}
+                                Div(
+                                    Label('{{field.name.replace('_', ' ').title()}}', _for='{{field.name}}'),
+                                    Textarea(id='{{field.name}}', name='{{field.name}}', cls='form-control', placeholder='{{field.name.replace('_', ' ').title()}}', required=True),
+                                    Div('Field [{{field.name}}] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
                                 ),
                                 {% else -%}
                                 Div(
@@ -74,8 +81,21 @@ def New{{domain.title()}}Page(session, *args, **kwargs):
                                     ),
                                     cls='col-md-12 mb-3'
                                 ),                                
-                                {% else -%}
-                                {% endif -%}
+                                {% elif field.type.__name__ == 'datetime' and field.name != 'date_created' and field.name != 'last_updated' -%}
+                                Div(
+                                    Label('{{field.name.replace('_', ' ').title()}}', _for='{{field.name}}'),
+                                    Input(id='{{field.name}}', name='{{field.name}}', type='datetime-local', cls='form-control', required=True),
+                                    Div('Field [{{field.name}}] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),
+                                {% elif field.type.__name__ == 'date' -%}
+                                Div(
+                                    Label('{{field.name.replace('_', ' ').title()}}', _for='{{field.name}}'),
+                                    Input(id='{{field.name}}', name='{{field.name}}', type='date', cls='form-control', required=True),
+                                    Div('Field [{{field.name}}] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),                                
+                                {% endif -%}                                
                                 {% endif -%}
                                 {% endfor -%}
                                 cls='row g-6'

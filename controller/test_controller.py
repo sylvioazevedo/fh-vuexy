@@ -93,7 +93,7 @@ def post(test:dict, session):
         return index(session, message=f'Test [{resp['id']}:{test['_id']}] successfully created.')
 
     except Exception as e:
-        return edit(test['_id'], session, error=f'Error updating test [{test["_id"]}] - {str(e)}')
+        return edit(test['_id'], session, error=f'Error saving test [{test["_id"]}] - {str(e)}')
 
 @rt('/update')
 def post(test: dict, session):

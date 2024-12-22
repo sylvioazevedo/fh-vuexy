@@ -40,6 +40,12 @@ def EditTestPage(session, **kwargs):
                                     Div('Field [description] is required.', cls='invalid-feedback'),
                                     cls='col-md-6 mb-3'                        
                                 ),
+                                Div(
+                                    Label('Birthday', _for='birthday'),
+                                    Input(id='birthday', name='birthday', type='date', cls='form-control', value=test['birthday'] if 'birthday' in test else '', required=True),
+                                    Div('Field [birthday] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),     
                                 cls='row g-6'
                             ),
                             Div(

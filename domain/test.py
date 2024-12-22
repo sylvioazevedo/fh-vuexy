@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime as dt
+from datetime import datetime as dt, date
 from mongodb.base import MongoEntity
 
 @dataclass
@@ -11,7 +11,7 @@ class Test(MongoEntity):
     # put domain properties here
     name: str = None
     description: str = field(default=None, metadata='textarea')	
-    birthday: dt = None
+    birthday: date = None
 
     # default constructor
     def __init__(self, *args, **kwargs):
