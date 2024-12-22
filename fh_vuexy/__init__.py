@@ -603,6 +603,20 @@ def VerticalMenu(id, *items, brand_logo, brand_text, cls='', **kw):
                 cls='layout-menu menu-vertical menu bg-menu-theme',
                 **kw
             )
+
+def VerticalMenuGroup(text, *items, icon=None, active:bool=False, cls='', **kw):
+    return \
+        Li(
+            A(
+                I(cls=f'menu-icon ti ti-angle-down {icon if icon else ""}'),
+                Div(text, data_i18n=text),
+                href='javascript:void(0);',
+                cls=f'menu-link menu-toggle {cls}',
+                **kw
+            ),
+            Ul(*items, cls='menu-sub'),
+            cls=f'menu-item{" active open" if active else ""}',
+        )
     
 def LayoutPage(*c, cls='', **kw):
     return Div(*c, cls=f'layout-page {cls}', **kw)

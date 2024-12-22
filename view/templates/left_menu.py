@@ -11,8 +11,15 @@ def LeftMenu(session):
         role = user['role']
 
         items += (
-            VerticalMenuItem('Forms', icon='ti ti-forms', href='/forms', active=session['active'] == 'Forms'),
-            VerticalMenuItem('Cards', icon='ti ti-id', href='/cards', active=session['active'] == 'Cards'),
+            VerticalMenuGroup(
+                'Components',
+                VerticalMenuItem('Forms', icon='ti ti-forms', href='/forms', active=session['active'] == 'Forms'),
+                VerticalMenuItem('Cards', icon='ti ti-id', href='/cards', active=session['active'] == 'Cards'),
+                icon='ti ti-package',
+                active=session['active'] in ['Forms', 'Cards']
+            ),
+            # kenkun|left_menu                        
+            VerticalMenuItem('Tests', icon='ti ti-point', href='/test', active=session['active'] == 'Tests'),
             Divider() if role == 'admin' else None,
             VerticalMenuItem('Users', icon='ti ti-user', href='/user', active=session['active'] == 'Users') if role == 'admin' else None,
             Divider(),

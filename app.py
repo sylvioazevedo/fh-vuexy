@@ -1,9 +1,9 @@
 from base.engine import get_app
 
-
+# kenkun|controllers
+from controller.test_controller import test_app as test_routes
 from controller.auth_controller import auth_app as auth_routes, beforeware
 from controller.user_controller import user_app as user_routes
-from controller.test_controller import test_app as test_routes
 
 from view.cards_page import CardsPage
 from view.forms_page import FormsPage
@@ -18,11 +18,12 @@ reg_re_param("static", "ico|gif|jpg|jpeg|webm|css|js|woff|png|svg|mp4|webp|ttf|o
 exception_handlers = {
     404: NotFoundPage
 }
-
-routes = [
-    Mount('/auth', auth_routes, name='auth'),
-    Mount('/user', user_routes, name='user'),
+    
+routes = [    
+    # kenkun|routes    
     Mount('/test', test_routes, name='test'),
+    Mount('/auth', auth_routes, name='auth'),
+    Mount('/user', user_routes, name='user'),    
 ]
 
 app, rt = get_app(routes=routes, before=beforeware, exception_handlers=exception_handlers)

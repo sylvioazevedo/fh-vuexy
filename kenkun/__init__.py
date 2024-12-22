@@ -112,3 +112,53 @@ def generate_all(domain: str):
     
     generate_views(domain)
     generate_controller(domain)
+
+def incorporate(domain: str):
+
+    # open app.py and isert a new route
+    with open('./app.py', 'r') as f:
+        lines = f.readlines()
+
+    with open('./app.py', 'w') as f:
+        for line in lines:
+            if line.strip().startswith('# kenkun|controllers'):
+                f.write(line)
+                f.write(f"from controller.{domain}_controller import {domain}_app as {domain}_routes\n")                
+                continue
+
+            f.write(line)
+
+        f.flush()
+
+    # open app.py and isert a new route
+    with open('./app.py', 'r') as f:
+        lines = f.readlines()
+
+    with open('./app.py', 'w') as f:
+        for line in lines:            
+            if line.strip().startswith('# kenkun|routes'):
+                f.write(line)    
+                f.write(f"    Mount('/{domain}', {domain}_routes, name='{domain}'),\n")
+                continue
+
+            f.write(line)  
+
+        f.flush()  
+
+    # incorporate the new route in left menu
+    with open('./view/templates/left_menu.py', 'r') as f:
+        lines = f.readlines()
+    
+    with open('./view/templates/left_menu.py', 'w') as f:
+        for line in lines:
+            if line.strip().startswith('# kenkun|left_menu'):
+                f.write(line)
+                f.write(f"            VerticalMenuItem('{domain.title()}s', icon='ti ti-point', href='/{domain}', active=session['active'] == '{domain.title()}s'),\n")
+                continue
+
+            f.write(line)
+
+        f.flush()
+    
+    print(f"Added route for {domain} in app.py")
+
