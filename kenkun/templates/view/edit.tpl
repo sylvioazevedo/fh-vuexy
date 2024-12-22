@@ -60,6 +60,13 @@ def Edit{{domain.title()}}Page(session, **kwargs):
                                     Div('Field [e-mail] is required. [x@x.com.x]', cls='invalid-feedback'),
                                     cls='col-md-6 mb-3'
                                 ),
+                                {% elif (field.metadata and 'text' in field.metadata) -%}
+                                Div(
+                                    Label('{{field.name.replace('_', ' ').title()}}', _for='{{field.name}}'),
+                                    Textarea({{domain}}['{{field.name}}'] if '{{field.name}}' in {{domain}} else '', id='{{field.name}}', name='{{field.name}}', cls='form-control', placeholder='{{field.name.replace('_', ' ').title()}}', required=True),
+                                    Div('Field [{{field.name}}] is required.', cls='invalid-feedback'),
+                                    cls='col-md-6 mb-3'
+                                ),
                                 {% else -%}
                                 Div(
                                     Label('{{field.name.replace('_', ' ').title()}}', _for='{{field.name}}'),

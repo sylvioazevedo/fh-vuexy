@@ -36,9 +36,9 @@ def EditTestPage(session, **kwargs):
                                 ),
                                 Div(
                                     Label('Description', _for='description'),
-                                    Input(id='description', name='description', type='text', cls='form-control', placeholder='Description', value=test['description'] if 'description' in test else '', required=True),                                    
+                                    Textarea(test['description'] if 'description' in test else '', id='description', name='description', cls='form-control', placeholder='Description', required=True),
                                     Div('Field [description] is required.', cls='invalid-feedback'),
-                                    cls='col-md-6 mb-3'                        
+                                    cls='col-md-6 mb-3'
                                 ),
                                 Div(
                                     Label('Birthday', _for='birthday'),
