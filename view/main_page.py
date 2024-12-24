@@ -9,7 +9,7 @@ def MainPage(session, **kwargs):
     error = session.pop('error', None)
 
     return \
-        MainLayout('Vuejs Vuexy Template',
+        MainLayout('|-APPNAME-|',
             Page(                
                 'Dashboard',
                 Alert( f'{error}', type=AlertTypeT.Danger) if error else None,
