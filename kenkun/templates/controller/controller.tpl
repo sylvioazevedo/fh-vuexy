@@ -72,7 +72,7 @@ def edit(id:str, session, message=None, error=None):
         service = {{domain.title()}}Service(session)
         {{domain}} = service.find_by_id('{{domain}}', id)
 
-        return Edit{{domain.title()}}Page(session, message=message, {{domain}}={{domain}})
+        return Edit{{domain.title()}}Page(session, message=message, error=error, {{domain}}={{domain}})
     
     except Exception as e:
         session['error'] = f'{str(e)}'

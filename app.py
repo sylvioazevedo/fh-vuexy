@@ -44,4 +44,15 @@ def index(session):
 def index(session):    
     return ProfilePage(session)
 
-serve()
+#serve()
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "app:app",
+        host="0.0.0.0",
+        port=5001,
+        ssl_keyfile=r"C:\Users\sazevedo\Documents\devel\certs\local\private.key",
+        ssl_certfile=r"C:\Users\sazevedo\Documents\devel\certs\local\certificate.crt",
+        timeout_keep_alive=120,        
+        timeout_graceful_shutdown=3,
+    )

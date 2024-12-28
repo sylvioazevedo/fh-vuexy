@@ -8,7 +8,6 @@ def EditUserPage(session, **kwargs):
     user = kwargs.get('user', {})
     role_list = ["admin", "user"]    
     
-    
     message = kwargs.get('message', None)
     error = kwargs.get('error', None)
 

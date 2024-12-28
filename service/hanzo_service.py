@@ -5,7 +5,7 @@ import requests
 
 class HanzoService():
 
-    def __init__(self, session=None):
+    def __init__(self, session=None) -> None:
 
         self.api_url = HANZO_API_URI if HANZO_API_URI else 'http://127.0.0.1:35777'
 

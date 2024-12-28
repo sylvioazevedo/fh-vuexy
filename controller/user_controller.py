@@ -67,7 +67,7 @@ def edit(id:str, session, message=None, error=None):
         service = UserService(session)
         user = service.find_by_id('user', id)
 
-        return EditUserPage(session, message=message, user=user)
+        return EditUserPage(session, message=message, error=error, user=user)
     
     except Exception as e:
         session['error'] = f'{str(e)}'
